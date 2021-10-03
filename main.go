@@ -8,6 +8,7 @@ import (
 	"net/http"
 )
 
+// Add comment for Ilya
 type CurrencyData struct {
 	Price24h       float64 `json:"price_24h"`
 	Volume24h      float64 `json:"volume_24h"`
