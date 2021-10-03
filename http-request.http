@@ -1,0 +1,17 @@
+POST  http://localhost:8080/ HTTP/1.1
+Content-Type: application/json
+
+[
+    {
+        "symbol":"XLM-EUR",
+        "price_24h":0.25685,
+        "volume_24h":49644.7076291,
+        "last_trade_price":0.24
+    },
+    {
+        "symbol":"XLM-RUB",
+        "price_24h":0.25685,
+        "volume_24h":49644.7076291,
+        "last_trade_price":0.24
+    }
+]
