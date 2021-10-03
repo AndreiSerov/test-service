@@ -1,14 +1,19 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"reflect"
+	"time"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Add comment for Ilya
 type CurrencyData struct {
 	Price24h       float64 `json:"price_24h"`
 	Volume24h      float64 `json:"volume_24h"`
@@ -35,7 +40,34 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	json.Unmarshal(body, &c)
 
-	// save in REPO
+	// DB CONNECT
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://mongodb:27017"))
+    if err != nil {
+        log.Fatal(err)
+    }
+    ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+    err = client.Connect(ctx)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer client.Disconnect(ctx)
+
+	// DB interaction
+    testDatabase := client.Database("test")
+    currencyCollection := testDatabase.Collection("curencies")
+	for _, target := range c {
+		targetResult, err := currencyCollection.InsertOne(ctx, target)
+		if err != nil { 
+			fmt.Println("InsertOne ERROR:", err)
+			return
+		} 
+		fmt.Printf("targetResult: %v\n", targetResult)
+		newID := targetResult.InsertedID 
+		fmt.Println("InsertOne() newID:", newID) 
+		fmt.Println("InsertOne() newID type:", reflect.TypeOf(newID)) 
+	}
+
+	// Map response
 	var m = make(map[string]CurrencyData)
 	for _, s := range c {
 		m[s.Symbol] = CurrencyData{

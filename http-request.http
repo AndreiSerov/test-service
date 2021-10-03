@@ -4,7 +4,7 @@ Content-Type: application/json
 [
     {
         "symbol":"XLM-EUR",
-        "price_24h":0.25685,
+        "price_24h":0.2342134,
         "volume_24h":49644.7076291,
         "last_trade_price":0.24
     },

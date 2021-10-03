@@ -13,5 +13,10 @@ services:
             - 27017:27017
     
     test-service:
-
+        build: .
+        container_name: test-service
+        ports:
+          - 8080:8080
+        depends_on:
+          - 'mongodb'
         # command: mongod --smallfiles --logpath=/dev/null
